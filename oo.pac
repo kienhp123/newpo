@@ -14,7 +14,7 @@ function FindProxyForURL(url, host) {
     if (isTikTok) {
 
         // Cho phép từ 14:00:00 đến 14:59:59
-        if (hour === 22) {
+        if (hour === 14) {
             return "DIRECT";
         }
 
@@ -25,3 +25,4 @@ function FindProxyForURL(url, host) {
     // ===== Các website khác =====
     return "DIRECT";
 }
+
