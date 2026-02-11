@@ -3,7 +3,7 @@ function FindProxyForURL(url, host) {
     // --- CẤU HÌNH ---
     // Khung giờ cho phép: 14:00 - 14:59
     // timeRange(hour1, hour2) hoạt động theo giờ địa phương của máy tính
-    var allowAccess = timeRange(14, 14);
+    var allowAccess = timeRange(22, 22);
 
     // --- DANH SÁCH DOMAIN TIKTOK ---
     var isTikTok = 
@@ -38,3 +38,4 @@ function FindProxyForURL(url, host) {
     // Các trang web khác không phải TikTok: Cho phép truy cập
     return "DIRECT";
 }
+
