@@ -1,28 +1,40 @@
 function FindProxyForURL(url, host) {
 
-    // Lấy giờ hiện tại (theo giờ máy tính)
-    var now = new Date();
-    var hour = now.getHours();   // 0–23
-    var minute = now.getMinutes();
+    // --- CẤU HÌNH ---
+    // Khung giờ cho phép: 14:00 - 14:59
+    // timeRange(hour1, hour2) hoạt động theo giờ địa phương của máy tính
+    var allowAccess = timeRange(14, 14);
 
-    // Kiểm tra domain TikTok
-    var isTikTok =
-        dnsDomainIs(host, "tiktok.com") ||
-        shExpMatch(host, "*.tiktok.com");
+    // --- DANH SÁCH DOMAIN TIKTOK ---
+    var isTikTok = 
+        // Website chính
+        dnsDomainIs(host, "tiktok.com") || 
+        shExpMatch(host, "*.tiktok.com") ||
+        
+        // App/Video server
+        dnsDomainIs(host, "tiktokv.com") ||
+        shExpMatch(host, "*.tiktokv.com") ||
+        
+        // CDN và ảnh (quan trọng)
+        dnsDomainIs(host, "byteoversea.com") ||                
+        shExpMatch(host, "*.byteoversea.com") ||
+        dnsDomainIs(host, "ibytedtos.com") ||
+        shExpMatch(host, "*.ibytedtos.com") ||
+        dnsDomainIs(host, "tiktokcdn.com") ||
+        shExpMatch(host, "*.tiktokcdn.com");
 
-    // ===== TikTok: CHỈ cho phép từ 14:00 đến 15:00 =====
+    // --- XỬ LÝ LOGIC ---
     if (isTikTok) {
-
-        // Cho phép từ 14:00:00 đến 14:59:59
-        if (hour === 14) {
+        if (allowAccess) {
+            // Trong khung giờ: Cho phép truy cập trực tiếp
             return "DIRECT";
+        } else {
+            // Ngoài khung giờ: Chặn kết nối bằng cách trỏ tới proxy ảo
+            return "PROXY 127.0.0.1:9";
         }
-
-        // Ngoài khung giờ → BLOCK
-        return "PROXY 127.0.0.1:9";
     }
 
-    // ===== Các website khác =====
+    // --- MẶC ĐỊNH ---
+    // Các trang web khác không phải TikTok: Cho phép truy cập
     return "DIRECT";
 }
-
