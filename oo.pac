@@ -1,21 +1,27 @@
-function FindProxyForURL(url, host)
-{
+function FindProxyForURL(url, host) {
 
-if (shExpMatch (url, "*tiktok.com*")){ 
- return "PROXY www.douyin.com:8080; PROXY :3128";
-}
-if (dnsDomainIs (host, "blackberry.com")){ 
- return "NATIVE";
-}
-if (dnsDomainIs (host, ".example.com")){ 
- return "BLOCK";
-}
-  
-//redirect on http page
-if (shExpMatch (url, "*domain123.example.net*")){ 
- return "BLOCK http://domain1.example.org/";
-}
+    // Lấy giờ hiện tại (theo giờ máy tính)
+    var now = new Date();
+    var hour = now.getHours();   // 0–23
+    var minute = now.getMinutes();
 
-return "DIRECT"; 
+    // Kiểm tra domain TikTok
+    var isTikTok =
+        dnsDomainIs(host, "tiktok.com") ||
+        shExpMatch(host, "*.tiktok.com");
 
+    // ===== TikTok: CHỈ cho phép từ 14:00 đến 15:00 =====
+    if (isTikTok) {
+
+        // Cho phép từ 14:00:00 đến 14:59:59
+        if (hour === 22) {
+            return "DIRECT";
+        }
+
+        // Ngoài khung giờ → BLOCK
+        return "PROXY 127.0.0.1:9";
+    }
+
+    // ===== Các website khác =====
+    return "DIRECT";
 }
